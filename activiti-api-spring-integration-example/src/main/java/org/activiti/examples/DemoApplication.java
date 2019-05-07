@@ -1,11 +1,5 @@
 package org.activiti.examples;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-
 import org.activiti.api.process.model.ProcessDefinition;
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
@@ -30,6 +24,12 @@ import org.springframework.integration.file.FileReadingMessageSource;
 import org.springframework.integration.file.filters.SimplePatternFileListFilter;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 @SpringBootApplication
 @EnableIntegration
@@ -116,12 +116,10 @@ public class DemoApplication implements CommandLineRunner {
             // Logic Here to decide if content is approved or not
             if (contentToProcess.contains("activiti")) {
                 logger.info("> Approving content: " + contentToProcess);
-                integrationContext.addOutBoundVariable("approved",
-                        true);
+                integrationContext.addOutBoundVariable("approved", true);
             } else {
                 logger.info("> Discarding content: " + contentToProcess);
-                integrationContext.addOutBoundVariable("approved",
-                        false);
+                integrationContext.addOutBoundVariable("approved", false);
             }
             return integrationContext;
         };
@@ -132,8 +130,7 @@ public class DemoApplication implements CommandLineRunner {
         return integrationContext -> {
             String contentToTag = (String) integrationContext.getInBoundVariables().get("content");
             contentToTag += " :) ";
-            integrationContext.addOutBoundVariable("content",
-                    contentToTag);
+            integrationContext.addOutBoundVariable("content", contentToTag);
             logger.info("Final Content: " + contentToTag);
             return integrationContext;
         };
@@ -144,8 +141,7 @@ public class DemoApplication implements CommandLineRunner {
         return integrationContext -> {
             String contentToDiscard = (String) integrationContext.getInBoundVariables().get("content");
             contentToDiscard += " :( ";
-            integrationContext.addOutBoundVariable("content",
-                    contentToDiscard);
+            integrationContext.addOutBoundVariable("content", contentToDiscard);
             logger.info("Final Content: " + contentToDiscard);
             return integrationContext;
         };

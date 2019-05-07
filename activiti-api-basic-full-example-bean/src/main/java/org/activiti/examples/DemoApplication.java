@@ -1,10 +1,5 @@
 package org.activiti.examples;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
 import org.activiti.api.model.shared.model.VariableInstance;
 import org.activiti.api.process.model.ProcessDefinition;
 import org.activiti.api.process.model.ProcessInstance;
@@ -24,6 +19,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 @SpringBootApplication
 @EnableScheduling
@@ -90,12 +90,12 @@ public class DemoApplication implements CommandLineRunner {
 
         Page<Task> tasks = taskRuntime.tasks(Pageable.of(0, 10));
         if (tasks.getTotalItems() > 0) {
-            for (Task t : tasks.getContent()) {
+            for (Task task : tasks.getContent()) {
 
-                logger.info("> Claiming task: " + t.getId());
-                taskRuntime.claim(TaskPayloadBuilder.claim().withTaskId(t.getId()).build());
+                logger.info("> Claiming task: " + task.getId());
+                taskRuntime.claim(TaskPayloadBuilder.claim().withTaskId(task.getId()).build());
 
-                List<VariableInstance> variables = taskRuntime.variables(TaskPayloadBuilder.variables().withTaskId(t.getId()).build());
+                List<VariableInstance> variables = taskRuntime.variables(TaskPayloadBuilder.variables().withTaskId(task.getId()).build());
                 VariableInstance variableInstance = variables.get(0);
                 if (variableInstance.getName().equals("content")) {
                     Content contentToProcess = variableInstance.getValue();
@@ -108,8 +108,7 @@ public class DemoApplication implements CommandLineRunner {
                         logger.info("> User Discarding content");
                         contentToProcess.setApproved(false);
                     }
-                    taskRuntime.complete(TaskPayloadBuilder.complete()
-                            .withTaskId(t.getId()).withVariable("content", contentToProcess).build());
+                    taskRuntime.complete(TaskPayloadBuilder.complete().withTaskId(task.getId()).withVariable("content", contentToProcess).build());
                 }
 
 
